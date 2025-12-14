@@ -34,6 +34,9 @@ Each sample demonstrates one feature of the SDK, together with tests.
 
 - [**Basic apiKey hello world**](./helloworld-apiKey): Simple example of a
 Workflow Definition and an Activity Definition using API Key to authenticate with Temporal Cloud.
+
+- [**Basic external environment configuration**](./external-env-conf): Simple example showing how to configure a client
+with an external configuration file, like TOML, decoupling connection settings from application code.
 ### API demonstrations
 
 - **Async activity completion**: Example of
@@ -41,7 +44,7 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
   server API. Additional
   documentation: [How to complete an Activity Execution asynchronously in Go](https://docs.temporal.io/application-development/foundations/#develop-activities)
 
-- [**Retry Activity Execution**](./retryactivity): This samples
+- [**Retry Activity Execution**](./retryactivity): This sample
   executes an unreliable Activity. The Activity is executed with a custom Retry Policy. If the Activity Execution fails,
   the Server will schedule a retry based on the Retry Policy. This Activity also includes a Heartbeat, which enables it
   to resume from the Activity Execution's last reported progress when it retries.
@@ -51,13 +54,13 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
   Workflow Execution after completing its last Run.
 
 - [**Child Workflow with ContinueAsNew**](./child-workflow-continue-as-new): Demonstrates
-  that the call to Continue-As-New, by a Child Workflow Execution, is *not visible to the a parent*. The Parent Workflow
+  that the call to Continue-As-New, by a Child Workflow Execution, is *not visible to the parent*. The Parent Workflow
   Execution receives a notification only when a Child Workflow Execution completes, fails or times out. This is a useful
   feature when there is a need to **process a large set of data**. The child can iterate over the data set calling
   Continue-As-New periodically without polluting the parents' history.
 
 - [**Cancellation**](./cancellation): Demonstrates how to cancel a
-  Workflow Execution by calling `CancelWorkflow`, an how to defer an Activity Execution that "cleans up" after the
+  Workflow Execution by calling `CancelWorkflow`, and how to defer an Activity Execution that "cleans up" after the
   Workflow Execution has been cancelled.
 
 - **Coroutines**: Do not use native `go` routines in Workflows. Instead use Temporal coroutines (`workflow.Go()`) to
@@ -68,9 +71,10 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
   , [PSO](./pso) Workflow examples.
 
 - [**Cron Workflow**](./cron): Demonstrates a recurring Workflow
-  Execution that occurs according to a cron schedule. This samples showcases the `HasLastCompletionResult`
-  and `GetLastCompletionResult` APIs which are used to pass information between executions. Additional
-  documentation: [What is a Temporal Cron Job?](https://docs.temporal.io/docs/content/what-is-a-temporal-cron-job).
+  Execution that occurs according to a cron schedule. This sample showcases the `HasLastCompletionResult` and
+  `GetLastCompletionResult` APIs which are used to pass information between executions. **Note that we recommend
+  using Schedules instead of Cron Jobs.**
+  Additional documentation: [What is a Temporal Cron Job?](https://docs.temporal.io/docs/content/what-is-a-temporal-cron-job).
 
 - [**Schedule Workflow**](./schedule): Demonstrates a recurring Workflow
   Execution that occurs according to a schedule.
@@ -81,7 +85,7 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
   encryption and compression)
 
 - [**Codec Server**](./codec-server): Demonstrates using a codec
-  server to decode payloads for display in tctl and Temporal Web. This setup can be used for any kind of codec, common
+  server to decode payloads for display in Temporal CLI and Temporal Web. This setup can be used for any kind of codec, common
   examples are compression or encryption.
 
 - [**Query Example**](./query): Demonstrates how to Query the state
@@ -111,8 +115,8 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
 - [**Memo**](./memo): Demonstrates how to use Memo that can be used
   to store any kind of data.
 
-- [**Typed Search Attributes**](./typed-searchattributes): Demonstrates how to
-  use custom Search Attributes that can be used to find Workflow Executions using predicates/
+- [**Search Attributes**](./searchattributes): Demonstrates how to
+  use custom Search Attributes that can be used to find Workflow Executions using predicates.
 
 - [**Timer Futures**](./timer): The sample starts a long running
   order processing operation and starts a Timer (`workflow.NewTimer()`). If the processing time is too long, a
@@ -138,8 +142,11 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
 - [**Greetings Local**](./greetingslocal): Demonstrates how to pass
   dependencies to local activities defined as struct methods.
 
-- [**Interceptors**](./interceptor): Demonstrates how to use
+- [**Logging Interceptor**](./logger-interceptor): Demonstrates how to use
   interceptors to intercept calls, in this case for adding context to the logger.
+
+- [**Workflow Security Interceptor**](./workflow-security-interceptor): Demonstrates how to use
+  interceptors to intercept child workflow calls, in this case for validating their type.
 
 - [**Update**](./update): Demonstrates how to create a workflow that reacts
   to workflow update requests.
@@ -149,6 +156,9 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
 ### Dynamic Workflow logic examples
 
 These samples demonstrate some common control flow patterns using Temporal's Go SDK API.
+
+- [**Dynamic Workflows**](./dynamic-workflows): Demonstrates how to execute Workflows and Activities dynamically,
+  using a single "Dynamic Workflow"
 
 - [**Dynamic Execution**](./dynamic): Demonstrates how to execute
   Workflows and Activities using a name rather than a strongly typed function.
@@ -176,11 +186,11 @@ These samples demonstrate some common control flow patterns using Temporal's Go 
   not finished.
 
 - [**Split/Merge Future**](./splitmerge-future): Demonstrates how to
-  use futures to await for completion of multiple activities invoked in parallel. This samples to processes chunks of a
+  use futures to await completion of multiple activities invoked in parallel. This sample processes chunks of a
   large work item in parallel, and then merges the intermediate results to generate the final result.
 
 - [**Split/Merge Selector**](./splitmerge-selector): Demonstrates how
-  to use Selector to process activity results as soon as they become available. This samples to processes chunks of a
+  to use Selector to process activity results as soon as they become available. This sample processes chunks of a
   large work item in parallel, and then merges the intermediate results to generate the final result.
 
 - [**Synchronous Proxy Workflow pattern**](./synchronous-proxy): This
@@ -197,8 +207,10 @@ These samples demonstrate some common control flow patterns using Temporal's Go 
 - [**Worker-specific Task Queues**](./worker-specific-task-queues): Use a unique task queue per Worker to have certain Activities only run on that specific Worker. For instance for a file processing Workflow, where one Activity downloads a file and subsequent Activities need to operate on that file. (If multiple Workers were on the same queue, subsequent Activities may get run on different machines that don't have the downloaded file.)
 
 - [**Nexus**](./nexus): Demonstrates how to use the Nexus APIs to facilitate cross namespace calls.
+
 - [**Nexus Cancelation**](./nexus-cancelation): Demonstrates how to cancel a Nexus operation from a caller workflow.
-- [**Nexus Context Propagation**](./nexus-context-propagation): Demonstrates how to propgate context through client calls, workflows, and Nexus headers.
+
+- [**Nexus Context Propagation**](./nexus-context-propagation): Demonstrates how to propagate context through client calls, workflows, and Nexus headers.
 
 ### Scenario based examples
 
@@ -213,7 +225,7 @@ These samples demonstrate some common control flow patterns using Temporal's Go 
 
 - [**File Processing**](./fileprocessing): Demonstrates how to
   download and process a file using set of Activities that run on the same host. Activities are executed to download a
-  file from the web, store it locally on the host, and then "process it". This samples showcases how to handle a
+  file from the web, store it locally on the host, and then "process it". This sample showcases how to handle a
   scenario where all subsequent Activities need to execute on the same host as the first Activity in the sequence. In
   Go, this is achieved by using the Session APIs.
 
@@ -222,8 +234,8 @@ These samples demonstrate some common control flow patterns using Temporal's Go 
   use of parallel executions, `ContinueAsNew` for long histories, a Query API, and the use of a custom `DataConverter`
   for serialization.
 
-- [**Polling Services**](./polling): Recommended implementation of an activity that needs to periodically poll an external 
-resource waiting its successful completion
+- [**Polling Services**](./polling): Recommended implementation of an activity that needs to periodically poll an external
+resource waiting for its successful completion
 
 - [**Prometheus Metrics**](./metrics): Demonstrates how to instrument
   Temporal with Prometheus and Uber's Tally library.
@@ -235,10 +247,13 @@ resource waiting its successful completion
   Demonstrates how to accept requests via signals and use queries to poll for responses.
 
 - [**Request/Response with Response Updates**](./reqrespupdate):
-  Demonstrates how to accept requests and responsond via updates.
+  Demonstrates how to accept requests and respond via updates.
 
 - [**Early-Return**](./early-return):
   Demonstrates how to receive a response mid-workflow, while the workflow continues to run to completion.
+
+- [**Worker Versioning**](./worker-versioning):
+  Demonstrates how to use worker versioning to manage workflow code changes.
 
 ### Pending examples
 
