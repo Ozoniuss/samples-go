@@ -11,8 +11,6 @@ Server via the Temporal Go SDK.
 
 ## How to use
 
-- Run this in the browser with
-  Gitpod: [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/temporalio/samples-go/)
 - Or run Temporal Server locally with [VSCode Remote Containers](https://code.visualstudio.com/docs/remote/containers)
   . [![Open in Remote - Containers](https://img.shields.io/static/v1?label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/temporalio/samples-go)
 - Lastly, you can run Temporal Server locally on your own (follow
@@ -37,6 +35,9 @@ Workflow Definition and an Activity Definition using API Key to authenticate wit
 
 - [**Basic external environment configuration**](./external-env-conf): Simple example showing how to configure a client
 with an external configuration file, like TOML, decoupling connection settings from application code.
+
+- [**Standalone Activities**](standalone-activity/helloworld): Demonstrates how standalone activities work, where activities
+  can be called from the client directly and not wrapped in an activity.
 ### API demonstrations
 
 - **Async activity completion**: Example of
@@ -87,6 +88,10 @@ with an external configuration file, like TOML, decoupling connection settings f
 - [**Codec Server**](./codec-server): Demonstrates using a codec
   server to decode payloads for display in Temporal CLI and Temporal Web. This setup can be used for any kind of codec, common
   examples are compression or encryption.
+
+- [**External Storage**](./external-storage): Offload large payloads to
+  S3-compatible object storage plus a codec server built on
+  the SDK's payload HTTP handler so the Web UI and CLI can decode and download the externally-stored payloads.
 
 - [**Query Example**](./query): Demonstrates how to Query the state
   of a single Workflow Execution using the `QueryWorkflow` and `SetQueryHandler` APIs. Additional
@@ -212,9 +217,15 @@ These samples demonstrate some common control flow patterns using Temporal's Go 
 
 - [**Nexus Context Propagation**](./nexus-context-propagation): Demonstrates how to propagate context through client calls, workflows, and Nexus headers.
 
+
+
 ### Scenario based examples
 
 - [**Safe Message Handler**](./safe_message_handler): This demonstrates how to safely handle concurrent update and signal requests.
+
+- [**Nexus Messaging**](./nexus-messaging): Demonstrates how send signal, update and query messages through Nexus.
+  This contains two samples, one sending messages to an existing workflow and a second that creates a workflow through Nexus
+  and sends messages to it.
 
 - [**DSL Workflow**](./dsl): Demonstrates how to implement a
   DSL-based Workflow. This sample contains 2 yaml files that each define a custom "workflow" which instructs the
@@ -255,16 +266,12 @@ resource waiting for its successful completion
 - [**Worker Versioning**](./worker-versioning):
   Demonstrates how to use worker versioning to manage workflow code changes.
 
-### Pending examples
+### Serverless
 
-Mostly examples we haven't yet ported from https://github.com/temporalio/samples-java/
-
-- Async activity calling: *Example to be completed*
-- Async lambda:  *Example to be completed*
-- Periodic Workflow: Workflow that executes some logic periodically. *Example to be completed*
-- Exception propagation and wrapping: *Example to be completed*
-- Polymorphic activity: *Example to be completed*
-- Side Effect:  *Example to be completed* - [Docs](https://docs.temporal.io/application-development/features?lang=go#side-effects)
+- [**Lambda Worker**](./lambda-worker): Demonstrates how to run a Temporal Worker as an
+  AWS Lambda function using the `lambdaworker` contrib package, with OpenTelemetry
+  instrumentation via AWS Distro for OpenTelemetry (ADOT). Includes IAM role setup
+  and deployment scripts.
 
 ### Fixtures
 
